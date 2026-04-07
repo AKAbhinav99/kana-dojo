@@ -175,7 +175,7 @@ export default function BackToTop() {
     'transition-colors duration-200',
     'active:border-b-0',
     'hover:cursor-pointer',
-    'animate-float [--float-distance:-8px]'
+    'animate-float [--float-distance:-7px]'
   );
 
   // Current style classes
