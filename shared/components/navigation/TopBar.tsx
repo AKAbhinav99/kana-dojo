@@ -119,53 +119,59 @@ export default function TopBar() {
 
           {/* Navigation Links */}
           <div className='flex items-center gap-1'>
-            {navItems.map((item, index) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => playClick()}
-                className={clsx(
-                  'flex items-center gap-2 rounded-lg px-4 py-2.5 text-base font-medium transition-colors',
-                  'text-(--secondary-color) hover:bg-(--card-color) hover:text-(--main-color)',
-                )}
-              >
-                {item.charIcon ? (
-                  <span
-                    className={clsx(
-                      'inline-flex h-9 w-9 items-center justify-center rounded-xl text-lg',
-                      'bg-(--secondary-color) text-(--background-color)',
-                      'border-b-4 border-(--secondary-color-accent)',
-                      'transition-all duration-200',
-                      'motion-safe:animate-float [--float-distance:-3px]',
-                      index === 1 && '[animation-delay:0ms]',
-                      index === 2 && '[animation-delay:800ms]',
-                      index === 3 && '[animation-delay:1600ms]',
-                    )}
-                  >
-                    {item.charIcon}
-                  </span>
-                ) : (
-                  item.icon && (
+            {navItems.map((item, index) => {
+              const active = isActive(item.href);
+
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => playClick()}
+                  className={clsx(
+                    'flex items-center gap-2 rounded-lg px-4 py-2.5 text-base font-medium transition-colors',
+                    active
+                      ? 'bg-(--card-color) text-(--main-color)'
+                      : 'text-(--secondary-color) hover:bg-(--card-color) hover:text-(--main-color)',
+                  )}
+                >
+                  {item.charIcon ? (
                     <span
                       className={clsx(
-                        'inline-flex h-9 w-9 items-center justify-center rounded-xl',
+                        'inline-flex h-9 w-9 items-center justify-center rounded-xl text-lg',
                         'bg-(--secondary-color) text-(--background-color)',
                         'border-b-4 border-(--secondary-color-accent)',
                         'transition-all duration-200',
                         'motion-safe:animate-float [--float-distance:-3px]',
-                        index === 0 && '[animation-delay:0ms]',
-                        index === 4 && '[animation-delay:2400ms]',
+                        index === 1 && '[animation-delay:0ms]',
+                        index === 2 && '[animation-delay:800ms]',
+                        index === 3 && '[animation-delay:1600ms]',
                       )}
                     >
-                      <item.icon className='size-4' />
+                      {item.charIcon}
                     </span>
-                  )
-                )}
-                <span className={cn('text-xl text-(--main-color)')}>
-                  {item.name}
-                </span>
-              </Link>
-            ))}
+                  ) : (
+                    item.icon && (
+                      <span
+                        className={clsx(
+                          'inline-flex h-9 w-9 items-center justify-center rounded-xl',
+                          'bg-(--secondary-color) text-(--background-color)',
+                          'border-b-4 border-(--secondary-color-accent)',
+                          'transition-all duration-200',
+                          'motion-safe:animate-float [--float-distance:-3px]',
+                          index === 0 && '[animation-delay:0ms]',
+                          index === 4 && '[animation-delay:2400ms]',
+                        )}
+                      >
+                        <item.icon className='size-4' />
+                      </span>
+                    )
+                  )}
+                  <span className={cn('text-xl text-(--main-color)')}>
+                    {item.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </motion.nav>
@@ -188,40 +194,39 @@ export default function TopBar() {
           const active = isActive(item.href);
 
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              prefetch
-              onClick={playClick}
-              className={clsx(
-                'relative flex items-center justify-center rounded-2xl px-3 py-2 text-2xl transition-all duration-250',
-                active
-                  ? 'bg-(--border-color) text-(--main-color)'
-                  : 'text-(--secondary-color)',
-              )}
-            >
+            <div key={item.href} className='relative'>
+              {/* Sliding indicator - smooth spring animation */}
               {active && (
                 <motion.div
                   layoutId='mobile-nav-indicator'
-                  className='motion-safe:animate-float absolute inset-0 rounded-xl border-b-6 border-(--main-color-accent) bg-(--main-color) [--float-distance:-3.5px]'
+                  className='absolute inset-0 rounded-2xl'
                   transition={{
                     type: 'spring',
                     stiffness: 300,
                     damping: 30,
                   }}
-                />
+                >
+                  <div className='motion-safe:animate-float h-full w-full rounded-xl border-b-6 border-(--main-color-accent) bg-(--main-color) [--float-distance:-3.5px]' />
+                </motion.div>
               )}
-              <span
+              <Link
+                href={item.href}
+                prefetch
+                onClick={playClick}
                 className={clsx(
-                  'relative z-10',
-                  active && 'text-(--background-color)',
+                  'relative z-10 flex items-center justify-center rounded-2xl px-3 py-2 text-2xl transition-all duration-250',
+                  active &&
+                    'motion-safe:animate-float [--float-distance:-3.5px]',
+                  active
+                    ? 'text-(--background-color)'
+                    : 'text-(--secondary-color)',
                 )}
               >
                 {item.charIcon
                   ? item.charIcon
                   : Icon && <Icon className='shrink-0' />}
-              </span>
-            </Link>
+              </Link>
+            </div>
           );
         })}
       </motion.aside>
