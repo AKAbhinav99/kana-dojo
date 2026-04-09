@@ -9,6 +9,9 @@ import {
   House,
   BookOpen,
   Library,
+  Languages,
+  Repeat,
+  Package,
   type LucideIcon,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -71,12 +74,25 @@ export default function TopBar() {
     };
   }, []);
 
+  // Determine which tab to show based on current route
+  const getContextTab = () => {
+    if (pathWithoutLocale.startsWith('/resources')) {
+      return { name: 'Resources', href: '/resources', icon: Library };
+    } else if (pathWithoutLocale.startsWith('/translate')) {
+      return { name: 'Translate', href: '/translate', icon: Languages };
+    } else if (pathWithoutLocale.startsWith('/conjugate')) {
+      return { name: 'Conjugate', href: '/conjugate', icon: Repeat };
+    } else if (pathWithoutLocale.startsWith('/anki-converter')) {
+      return { name: 'Converter', href: '/anki-converter', icon: Package };
+    }
+    // Default to Academy
+    return { name: 'Academy', href: '/academy', icon: BookOpen };
+  };
+
+  const contextTab = getContextTab();
+
   const navItems: NavItem[] = [
-    { 
-      name: pathWithoutLocale.startsWith('/resources') ? 'Resources' : 'Academy',
-      href: pathWithoutLocale.startsWith('/resources') ? '/resources' : '/academy',
-      icon: pathWithoutLocale.startsWith('/resources') ? Library : BookOpen
-    },
+    contextTab,
     { name: 'Kana', href: '/kana', charIcon: 'あ' },
     { name: 'Kanji', href: '/kanji', charIcon: '字' },
     { name: 'Vocab', href: '/vocabulary', charIcon: '語' },
@@ -85,11 +101,7 @@ export default function TopBar() {
 
   const mobileNavItems: NavItem[] = [
     { name: 'Home', href: '/', icon: House },
-    { 
-      name: pathWithoutLocale.startsWith('/resources') ? 'Resources' : 'Academy',
-      href: pathWithoutLocale.startsWith('/resources') ? '/resources' : '/academy',
-      icon: pathWithoutLocale.startsWith('/resources') ? Library : BookOpen
-    },
+    contextTab,
     { name: 'Kana', href: '/kana', charIcon: 'あ' },
     { name: 'Vocab', href: '/vocabulary', charIcon: '語' },
     { name: 'Kanji', href: '/kanji', charIcon: '字' },
